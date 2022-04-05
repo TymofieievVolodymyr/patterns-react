@@ -99,3 +99,78 @@ export default Parent;
 // // ));
 //
 // render(<ToggleComponent />, document.getElementById('root'));
+
+import React from "react";
+
+const Cat = ({mouse}) => {
+  return (
+      <img
+          src="/cat.png"
+          alt="cat"
+          style={{ position: "absolute", left: mouse.x, top: mouse.y }}
+      />
+  );
+};
+
+const Mouse = (props) => {
+  const [state, setState] = React.useState();
+
+  const handleMouseMove = (event) => {
+    setState({
+      x: event.clientX,
+      y: event.clientY
+    });
+  };
+
+  return (
+      <div style={{ height: "100vh" }} onMouseMove={handleMouseMove}>
+        {props.render(state)}
+      </div>
+  );
+};
+
+const MouseTracker = () => {
+  return (
+      <div>
+        <h1>Move the mouse around!</h1>
+        <Mouse render={(mouse) => <Cat mouse={mouse} />} />
+      </div>
+  );
+};
+
+export const App = () => {
+  return (
+      <div className="App">
+        <MouseTracker />
+      </div>
+  );
+}
+
+
+import React from "react";
+import ReactDOM from "react-dom";
+
+import "./styles.css";
+
+function Renderer(props) {
+  return (
+      props.children()
+  );
+}
+
+function App() {
+  return (
+      <div className="App">
+        <Renderer>
+          {() => {
+            return (
+                <h1>I am being rendered by Renderer</h1>
+            );
+          }}
+        </Renderer>
+      </div>
+  );
+}
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
